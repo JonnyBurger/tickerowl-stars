@@ -1,6 +1,6 @@
 {
-  "producthunt-stats": {
-    "api-token": "",
-    "slug": ""
+  "github-stars": {
+    "org": "remotion-dev",
+    "repo": "remotion"
   }
 }

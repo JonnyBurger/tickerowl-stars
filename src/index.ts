@@ -21,7 +21,7 @@ export default class ProductHuntApp implements App {
 
   getSlides(): Record<string, AppSlide> {
     return {
-      github: {
+      ["github-stars"]: {
         title: "GitHub Stars",
         description: "Display the GitHub stars of a repo",
         inputs: {
@@ -39,20 +39,33 @@ export default class ProductHuntApp implements App {
           },
         },
         getData: async ({ inputs, store }) => {
-          const org = inputs["org"];
-          const repo = inputs["repo"];
+          try {
+            const org = inputs["org"];
+            const repo = inputs["repo"];
 
-          const slides: SlideData[] = [];
+            const ans = await fetch(
+              `https://api.github.com/repos/${org.value.value}/${repo.value.value}`
+            );
+            const json = await ans.json();
 
-          return {
-            slides: [
-              ...slides,
-              SlideMaker.keyValue({
-                key: "GitHub",
-                value: "20000",
-              }),
-            ],
-          };
+            return {
+              slides: [
+                SlideMaker.keyValue({
+                  key: "GitHub",
+                  value: String(json.stargazers_count),
+                }),
+              ],
+            };
+          } catch (e) {
+            return {
+              slides: [
+                SlideMaker.keyValue({
+                  key: "GitHub",
+                  value: "Error",
+                }),
+              ],
+            };
+          }
         },
       },
     };
